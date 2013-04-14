@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="PhluffyFotos" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="1" osVersion="*" schemaVersion="2012-10.1.8">
+  <Role name="PhluffyFotos.Worker">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="WorkerSleepTime" value="2000" />
+      <Setting name="DataConnectionString" value="DefaultEndpointsProtocol=https;AccountName=phluffyphotostorage;AccountKey=/uE8jZ26NgLwIWYURLLNHiQgaRWfDeehEeM2gTEpnS3AFiHOW8CVbh1g+BbGAdF9olI4+Fvve7cAO01dDveQMA==" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=phluffyphotostorage;AccountKey=/uE8jZ26NgLwIWYURLLNHiQgaRWfDeehEeM2gTEpnS3AFiHOW8CVbh1g+BbGAdF9olI4+Fvve7cAO01dDveQMA==" />
+    </ConfigurationSettings>
+  </Role>
+  <Role name="PhluffyFotos.Web">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <!--<Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=phluffyphotostorage;AccountKey=/uE8jZ26NgLwIWYURLLNHiQgaRWfDeehEeM2gTEpnS3AFiHOW8CVbh1g+BbGAdF9olI4+Fvve7cAO01dDveQMA==" />-->
+      <Setting name="DataConnectionString" value="DefaultEndpointsProtocol=https;AccountName=phluffyphotostorage;AccountKey=/uE8jZ26NgLwIWYURLLNHiQgaRWfDeehEeM2gTEpnS3AFiHOW8CVbh1g+BbGAdF9olI4+Fvve7cAO01dDveQMA==" />
+      <Setting name="DefaultConnection" value="Server=tcp:t59mmz5sqw.database.windows.net,1433;Database=PhluffyPhotosDB;User ID=bdudnik@t59mmz5sqw;Password=Dudadudl1###;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;" />
+    </ConfigurationSettings>
+  </Role>
+</ServiceConfiguration>
