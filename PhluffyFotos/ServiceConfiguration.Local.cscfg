@@ -12,9 +12,9 @@
     <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
-      <!--<Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=phluffyphotostorage;AccountKey=/uE8jZ26NgLwIWYURLLNHiQgaRWfDeehEeM2gTEpnS3AFiHOW8CVbh1g+BbGAdF9olI4+Fvve7cAO01dDveQMA==" />-->
       <Setting name="DataConnectionString" value="UseDevelopmentStorage=true" />
-      <Setting name="DefaultConnection" value="DataSource=.;Database=PhluffyPhotosDB;IntegratedSecurity=true;" />
+      <!--Write to cloud database-->
+      <Setting name="DefaultConnection" value="Server=tcp:t59mmz5sqw.database.windows.net,1433;Database=PhluffyPhotosLocalConfigurationDb;User ID=bdudnik@t59mmz5sqw;Password=Dudadudl1###;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

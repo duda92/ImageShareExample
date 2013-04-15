@@ -3,20 +3,28 @@ using System.Linq;
 using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using System.Diagnostics;
-using System.Collections.Generic;
 using AzureTraceListeners.Listeners;
 
-namespace MvcWebRole1
+namespace PhluffyFotos.Web
 {
     public class WebRole : RoleEntryPoint
     {
         public override bool OnStart()
         {
+            SetUpLogginForRole();
+            
+            return base.OnStart();
+        }
+  
+        private void SetUpLogginForRole()
+        {
             DiagnosticMonitorConfiguration dmc = DiagnosticMonitor.GetDefaultInitialConfiguration();
             dmc.Logs.ScheduledTransferPeriod = TimeSpan.FromMinutes(1);
             dmc.Logs.ScheduledTransferLogLevelFilter = LogLevel.Error;
 
-            Trace.Listeners.Add(new AzureTableTraceListener("app", "useDevelopmentStorage=true", "TraceLogs"));
+            string connectionString = RoleEnvironment.GetConfigurationSettingValue("Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString");
+
+            Trace.Listeners.Add(new AzureTableTraceListener("WebRole", connectionString, "TraceLogs"));
             //Windows Event Logs
             dmc.WindowsEventLog.DataSources.Add("System!*");
             dmc.WindowsEventLog.DataSources.Add("Application!*");
@@ -33,21 +41,7 @@ namespace MvcWebRole1
             //IIS Logs
             dmc.Directories.ScheduledTransferPeriod = TimeSpan.FromMinutes(1.0);
 
-            
             DiagnosticMonitor.Start("Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString", dmc);
-            
-            Trace.Listeners.Add(new AzureTableTraceListener("app", "useDevelopmentStorage=true", "TraceLogs"));
-            
-            Trace.Write("*********************************************Message*********************************************");
-            Trace.TraceError("*********************************************Message*********************************************");
-            Trace.TraceWarning("*********************************************Message*********************************************");
-            Trace.TraceInformation("*********************************************Message*********************************************");
-            Trace.Flush();// ("*********************************************Message*********************************************");
-            Trace.TraceError("*********************************************Message*********************************************");
-            
-
-            return base.OnStart();
-
 
         }
     }

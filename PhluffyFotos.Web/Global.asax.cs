@@ -8,7 +8,8 @@ namespace PhluffyFotos.Web
     using System.Web.Routing;
     using System.Web.Security;
     using Microsoft.WindowsAzure;
-    using System.Diagnostics;
+    using Microsoft.WindowsAzure.ServiceRuntime;
+    using System.Reflection;
 
     public class MvcApplication : System.Web.HttpApplication
     {
@@ -85,6 +86,9 @@ namespace PhluffyFotos.Web
 
         protected void Application_Start()
         {
+            MoveConnectionStringsToConfig("DefaultConnection");
+            MoveConnectionStringsToConfig("DataConnectionString");
+            
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
@@ -96,15 +100,20 @@ namespace PhluffyFotos.Web
             {
                 configSetter(ConfigurationManager.ConnectionStrings[configName].ConnectionString);
             });
+        }
+  
+        private void MoveConnectionStringsToConfig(string connectionStringKey)
+        {
+            string connectionString = RoleEnvironment.GetConfigurationSettingValue(connectionStringKey);
+            // Obtain the RuntimeConfig type. and instance
+            Type runtimeConfig = Type.GetType("System.Web.Configuration.RuntimeConfig, System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+            var runtimeConfigInstance = runtimeConfig.GetMethod("GetAppConfig", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, null);
 
-
-            Trace.Write("*********************************************Message*********************************************");
-            Trace.TraceError("*********************************************Message*********************************************");
-            Trace.TraceWarning("*********************************************Message*********************************************");
-            Trace.TraceInformation("*********************************************Message*********************************************");
-            Trace.Flush();// ("*********************************************Message*********************************************");
-            Trace.TraceError("*********************************************Message*********************************************");
-            
+            var connectionStringSection = runtimeConfig.GetProperty("ConnectionStrings", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(runtimeConfigInstance, null);
+            var connectionStrings = connectionStringSection.GetType().GetProperty("ConnectionStrings", BindingFlags.Public | BindingFlags.Instance).GetValue(connectionStringSection, null);
+            typeof(ConfigurationElementCollection).GetField("bReadOnly", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(connectionStrings, false);
+            // Set the SqlConnectionString property.
+            ((ConnectionStringsSection)connectionStringSection).ConnectionStrings.Add(new ConnectionStringSettings(connectionStringKey, connectionString));
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)
